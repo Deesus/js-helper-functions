@@ -164,3 +164,34 @@ function initCustomEvent(customEventName) {
 
     return event;
 }
+
+
+/**
+* Introspects a DOM element's style attribute.
+*
+* @param elem: node/element that is being inspected
+* @param property: CSS property to calculate (N.b. shorthand properties are not valid. E.g `border-bottom`
+*                  is valid while `border` is not.)
+* @returns {string}: calculated value.
+*/
+function computedStyle (elem, property) {
+    return window.getComputedStyle(elem, null).getPropertyValue(property);
+}
+
+/**
+     * Set CSS/styles of an element by passing in an object of key-value pairs.
+     *
+     * N.b. that the styles are appended inline; however, it DOES NOT override the entire `style` property;
+     * thus, allowing existing inline styles to remain on the element.
+     *
+     * @param elem {node}: element/node object
+     * @param stylesObject {object}: key-value pairs of CSS property and values, respectively
+     */
+    // TODO: add 'overloads': 1. getter if no args passed; 2. accept string if passed as arg
+    function css (elem, stylesObject) {
+        for (var key in stylesObject) {
+            if(stylesObject.hasOwnProperty(key)) {
+                elem.style[key] = stylesObject[key];
+            }
+        }
+    }
