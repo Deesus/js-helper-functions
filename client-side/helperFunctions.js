@@ -195,3 +195,34 @@ function computedStyle (elem, property) {
             }
         }
     }
+    
+    
+  /**
+   * For any given CSS selector, function grows height of <textarea> as user types input
+   * in textarea (does this on pageload plus adds event listener for keyup)
+   * 
+   */
+  // TODO: needs revision
+function setupAutoGrowTextarea (selector)
+{
+    // get all textareas, given the CSS selector/class:
+    var textAreas = document.querySelectorAll(selector);
+
+    // TODO: check height of border+padding and use this as 'diff'; 
+    // use diff to calculate updates to height
+    // helper function - adjusts height of a given element:
+    function adjustHeightOfElement(el)
+    {
+        el.style.height = '0px';                    // resets height to allow element to shrink
+        el.style.height = el.scrollHeight + 'px';   // resize
+    };
+
+    // loop through all textareas and resize on page load, then bind listener so that it resizes during keyup:
+    for (var i = 0; i < textAreas.length; ++i)
+    {
+        adjustHeightOfElement(textAreas[i]);
+        textAreas[i].addEventListener('keyup',
+                                      adjustHeightOfElement.bind(null, textAreas[i]));
+    }
+}
+  
