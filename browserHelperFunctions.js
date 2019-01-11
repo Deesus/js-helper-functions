@@ -1,4 +1,11 @@
 'use strict';
+/**
+ * Browser Helper Functions
+ *
+ * Author:  Dee Reddy
+ * License: BSD-2
+ * Repo:    https://github.com/Deesus/js-helper-functions
+ */
 
 
 /**
