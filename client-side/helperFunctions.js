@@ -1,19 +1,19 @@
 'use strict';
 
 
-// -----------------------------------------------------------------------
-// Adds CSS a property directly to <style> tag
-// This is useful when you need to dynamically compute a CSS value (e.g. branding color) and modify a CSS class accordingly.
-// 
-// Args:
-//   - selector {string}: CSS selector name
-//   - cssAttributes {object}: an object literal of attributes and values
-//
-// Example:
-//   addStylesToDOM('#main', {color: 'blue', 'border-left': '1px solid gray'});
-//
-function addStylesToDOM (selector,
-                         cssAttributes) {
+/**
+ * Adds CSS a property directly to <style> tag
+ * This is useful when you need to dynamically compute a CSS value (e.g. branding color) and modify a CSS class accordingly.
+ *
+ * @param selector {string}: CSS selector name
+ * @param cssAttributes {object}: an object literal of attributes and values
+ *
+ * @returns {undefined} (side-effect): Modifies browser's DOM; adds `<style>` tag
+ *
+ * Example:
+ *      addStylesToDOM('#main', {color: 'blue', 'border-left': '1px solid gray'});
+ */
+const addStylesToDOM =  (selector, cssAttributes)  => {
     let outputString = '';
     let headElement  = document.getElementsByTagName('head')[0];
 
@@ -27,12 +27,15 @@ function addStylesToDOM (selector,
     // append the string before the end of the <head> tag:
     headElement.insertAdjacentHTML('beforeend',
                                    `<style>${selector}{${outputString}}</style>`);
-}
+};
 
 
-// -----------------------------------------------------------------------
-// Discerns if the current device is a mobile device.
-function deviceIsMobile() {
+/**
+ * Discerns if the current device is a mobile device.
+ *
+ * @returns {boolean}: true/false if user device is a mobile device (but not a tablet)
+ */
+const deviceIsMobile = () => {
     let isMobile = false;
 
     if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
@@ -40,12 +43,15 @@ function deviceIsMobile() {
     }
 
     return isMobile;
-}
+};
 
 
-// -----------------------------------------------------------------------
-// Discerns if the current device is a tablet device.
-function deviceIsTablet() {
+/**
+ * Discerns if the current device is a tablet device.
+ *
+ * @returns {boolean}: true/false if user device is a tablet device (but not a phone)
+ */
+const deviceIsTablet = () => {
     let isTablet = false;
     let userAgent = navigator.userAgent.toLowerCase();
 
@@ -66,13 +72,18 @@ function deviceIsTablet() {
     }
 
     return isTablet;
-}
+};
 
 
-// -----------------------------------------------------------------------
-// Validates email addresses.
-// Note: Trims string before validating. Doesn't allow empty strings.
-function isEmailValid(emailString) {
+/**
+ * Validates email addresses (simple)
+ * Note: Trims string before validating. Doesn't allow empty strings.
+ *
+ * @param emailString {string}: email address to test
+ *
+ * @returns {boolean}: true/false if string is a valid email address
+ */
+const isEmailValid = (emailString) => {
     let isEmailValid;
     let regexValidEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;  // checks for valid email
 
@@ -80,12 +91,15 @@ function isEmailValid(emailString) {
     isEmailValid    = regexValidEmail.test(emailString);
 
     return isEmailValid;
-}
+};
 
 
-// -----------------------------------------------------------------------
-// Discerns if the user is using a Mac device/OS.
-function isMacDevice() {
+/**
+ * Discerns if the user is using a Mac device/OS.
+ *
+ * @returns {boolean}: true/false if user device is a Mac device
+ */
+const isMacDevice = () => {
     let isMac = false;
 
     // TODO: do we want to replace falsey statements with `navigator !== undefined`, `navigator !== null`, etc.?
@@ -96,55 +110,48 @@ function isMacDevice() {
     }
 
     return isMac;
-}
+};
 
 
-// -----------------------------------------------------------------------
-// Navigates to the passed url.
-function navigateToUrl (url) {
-    window.location.href = url;
-}
+/**
+ * Navigates to the passed url.
+ *
+ * @param url {string}: url to navigate to
+ * @param shouldNavigateToNewTab {boolean}: true/false if navigation should appear in a new tab (rather than a new window).
+ * N.b. this browsers may respond by interpreting this as a popup and blocking it.
+ *
+ * @returns {undefined} (side-effect): the browser navigates to a new page
+ */
+const navigateToUrl = (url, shouldNavigateToNewTab) => {
 
-
-// -----------------------------------------------------------------------
-// Opens a URL in a new tab.
-function navigateToUrlInNewTab(url,
-                               persistTab) {
-    let newTab;
-
-    // if the tab is only opened temporarily to download a file
-    if (persistTab === false) {
+    if (shouldNavigateToNewTab === true) {
         window.open(url, '_blank');
     }
     else {
-        // otherwise, open the tab
-        newTab = window.open('', '_blank');
-
-        // and post the URL to the new tab, keeping it open
-        // TODO: replace jQuery methods with pure JS:
-        // see <https://stackoverflow.com/questions/6396101/pure-javascript-send-post-data-without-a-form>
-        $.post(url, null)
-            .always(function (response) {
-                newTab.location = url;
-            });
+        window.location.href = url;
     }
-}
+};
 
 
-// -----------------------------------------------------------------------
-// Initializes custom event w/ IE11 polyfill.
-// Usage:
-// ```
-// // create new event:
-// let myEvent = initCustomEvent('NAME_OF_CUSTOM_EVENT');
-// // dispatch event:
-// document.dispatchEvent(myEvent);
-// // listen to event:
-// document.addEventListener(CUSTOM_EVENT_NAME,
-//                           CALLBACK_FUNCTION);
-// ```
+/**
+ * Initializes custom event w/ IE11 polyfill.
+ *
+ * Usage:
+ *      // create new event:
+ *      let myEvent = initCustomEvent('NAME_OF_CUSTOM_EVENT');
+ *
+ *      // dispatch event:
+ *      document.dispatchEvent(myEvent);
+ *
+ *      // listen to event:
+ *      document.addEventListener(CUSTOM_EVENT_NAME, CALLBACK_FUNCTION);
+ *
+ * @param customEventName {string}: the name of your custom event
+ *
+ * @returns {Event}: the event interface <https://developer.mozilla.org/en-US/docs/Web/API/Event>
+ */
 // TODO: perhaps combine the separate custom event functions into a single interface?
-function initCustomEvent(customEventName) {
+const initCustomEvent = (customEventName) => {
     let event;
 
     // initialize new custom event:
@@ -157,72 +164,62 @@ function initCustomEvent(customEventName) {
     catch (error) {
         event = document.createEvent("Event");
 
-        event.initEvent(customEventName,    // emitted event name
-                        false,              // doesn't bubble
-                        false);             // isn't cancelable
+        event.initEvent(customEventName,  // emitted event name
+                false,            // doesn't bubble
+              false);           // isn't cancelable
     }
 
     return event;
-}
+};
 
 
 /**
-* Introspects a DOM element's style attribute.
-*
-* @param elem: node/element that is being inspected
-* @param property: CSS property to calculate (N.b. shorthand properties are not valid. E.g `border-bottom`
-*                  is valid while `border` is not.)
-* @returns {string}: calculated value.
-*/
-function computedStyle (elem, property) {
-    return window.getComputedStyle(elem, null).getPropertyValue(property);
-}
+ * Introspects a DOM element's style attribute.
+ *
+ * @param el: node/element that is being inspected
+ * @param property: CSS property to calculate (N.b. shorthand properties are not valid. E.g `border-bottom`
+ *                  is valid while `border` is not.)
+ *
+ * @returns {string}: calculated value.
+ */
+const computedStyle = (el, property) => {
+    return window.getComputedStyle(el, null).getPropertyValue(property);
+};
+
 
 /**
-     * Set CSS/styles of an element by passing in an object of key-value pairs.
-     *
-     * N.b. that the styles are appended inline; however, it DOES NOT override the entire `style` property;
-     * thus, allowing existing inline styles to remain on the element.
-     *
-     * @param elem {node}: element/node object
-     * @param stylesObject {object}: key-value pairs of CSS property and values, respectively
-     */
-    // TODO: add 'overloads': 1. getter if no args passed; 2. accept string if passed as arg
-    function css (elem, stylesObject) {
-        for (var key in stylesObject) {
-            if(stylesObject.hasOwnProperty(key)) {
-                elem.style[key] = stylesObject[key];
-            }
+ * Set inline-styles of an element by passing in an object of key-value pairs.
+ *
+ * N.b. that the styles are appended inline; however, it DOES NOT override the entire `style` property;
+ * thus, allowing existing inline styles to remain on the element.
+ *
+ * @param el: element/node object
+ * @param stylesObject {object}: key-value pairs of CSS property and values, respectively
+ *
+ * @returns {undefined} (side-effect): inline styles added to element
+ */
+// TODO: add 'overloads' to function signature: 1. getter if no args passed; 2. accept string if passed as arg
+const css = (el, stylesObject) => {
+
+    for (let key in stylesObject) {
+        if(stylesObject.hasOwnProperty(key)) {
+            el.style[key] = stylesObject[key];
         }
     }
-    
-    
-  /**
-   * For any given CSS selector, function grows height of <textarea> as user types input
-   * in textarea (does this on pageload plus adds event listener for keyup)
-   * 
-   */
-  // TODO: needs revision
-function setupAutoGrowTextarea (selector)
-{
-    // get all textareas, given the CSS selector/class:
-    var textAreas = document.querySelectorAll(selector);
+};
 
-    // TODO: check height of border+padding and use this as 'diff'; 
-    // use diff to calculate updates to height
-    // helper function - adjusts height of a given element:
-    function adjustHeightOfElement(el)
-    {
-        el.style.height = '0px';                    // resets height to allow element to shrink
-        el.style.height = el.scrollHeight + 'px';   // resize
-    };
 
-    // loop through all textareas and resize on page load, then bind listener so that it resizes during keyup:
-    for (var i = 0; i < textAreas.length; ++i)
-    {
-        adjustHeightOfElement(textAreas[i]);
-        textAreas[i].addEventListener('keyup',
-                                      adjustHeightOfElement.bind(null, textAreas[i]));
-    }
-}
-  
+// ==================================================
+// module exports:
+// ==================================================
+export {
+    addStylesToDOM,
+    deviceIsMobile,
+    deviceIsTablet,
+    isEmailValid,
+    isMacDevice,
+    navigateToUrl,
+    initCustomEvent,
+    computedStyle,
+    css
+};
