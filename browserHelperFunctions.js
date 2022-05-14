@@ -2,7 +2,7 @@
 /**
  * Browser Helper Functions
  *
- * Author:  Dee Reddy
+ * Author:  Deepankara Reddy
  * License: BSD-2
  * Repo:    https://github.com/Deesus/js-helper-functions
  */
